@@ -1,0 +1,76 @@
+create user shreya identified by shreya;
+
+grant dba to shreya;
+
+
+
+create TABLE person1(
+driver_id VARCHAR2(20),
+dname VARCHAR2(20),
+address VARCHAR2(20),
+primary key (driver_id)
+);
+create table car(
+reg_num varchar2(20),
+model varchar2(20),
+year int,
+primary key (reg_num)
+);
+create table accident(
+report_num int,
+accident_date date,
+location varchar(20),
+primary key(report_num)
+);
+create table owns(
+driver_id VARCHAR2(20),
+reg_num varchar2(20),
+primary key  (driver_id,reg_num),
+foreign key (driver_id) references person1(driver_id),
+foreign key (reg_num) references car(reg_num)
+);
+create table participated(
+driver_id VARCHAR2(20),
+reg_num varchar2(20),
+report_num int,
+damage_amt int,
+primary key  (driver_id,reg_num,report_num),
+foreign key (driver_id) references person1(driver_id),
+foreign key (reg_num) references car(reg_num),
+foreign key (report_num) references accident(report_num)
+);
+insert into person1 values('&driver_id','&dname','&address');
+commit;
+
+select * from person1;
+insert into car values('&reg_num','&model','&year');
+commit;
+select * from car;
+insert into accident values('&report_num','&accident_date','&location');
+commit;
+select * from accident;
+insert into owns values('&driver_id','&reg_num');
+commit;
+select * from owns;
+insert into participated values('&driver_id','&reg_num','&report_num','&damage_amt');
+commit;
+select * from participated;
+update person1
+set dname='richard' , address='srinivas nagar'
+where driver_id=1;
+update person1
+set dname='pradeep' , address='rajajinagar'
+where driver_id=2;
+update participated
+set damage_amt=25000
+where reg_num='KA053408'
+and report_num=12;
+select * from participated;
+insert into accident values(16,'15-MAR-08','domlur');
+select * from accident;
+select count(distinct driver_id)
+cnt from participated a,accident b where
+a.report_num=b.report_num and b.accident_date like '%08';
+select count(report_num)
+cnt from car c,participated p where
+c.reg_num=p.reg_num and model='lancer';
